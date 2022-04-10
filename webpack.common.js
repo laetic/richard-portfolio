@@ -2,7 +2,10 @@ const path = require("path");
 const webpack = require("webpack");
 
 module.exports = {
-  entry: "./src/index.js",
+  entry: 
+  {
+    index: "./src/index.js",
+  },
   module: {
     rules: [
       {
@@ -45,7 +48,10 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "dist/"),
     publicPath: "/dist/",
-    filename: "bundle.js"
+    // `filename` provides a template for naming your bundles (remember to use `[name]`)
+    filename: '[name].bundle.js',
+    // `chunkFilename` provides a template for naming code-split bundles (optional)
+    chunkFilename: '[name].bundle.js',
   },
 };
 

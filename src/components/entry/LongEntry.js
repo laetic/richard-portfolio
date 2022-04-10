@@ -3,11 +3,13 @@ import { Container, Button, Alert } from 'react-bootstrap';
 import { CSSTransition } from 'react-transition-group';
 import "./Entry.css"
 import ReactPlayer from 'react-player/lazy'
-import ThreeScene from "../threejsdemo/ThreeScene"
-import Wordle from "../wordle/Wordle"
+// import ThreeScene from "../threejsdemo/ThreeScene"
+// import Wordle from "../wordle/Wordle"
 import { useMediaQuery } from 'react-responsive'
 import { useParams, useOutletContext } from "react-router-dom";
 import { getEntry, getImage } from './data'
+
+// const ThreeScene = lazy(() => import("../threejsdemo/ThreeScene"))
 
 export default function LongEntry() {
     const [entryIsSmall, setEntryIsSmall] = React.useState(true);
@@ -21,9 +23,9 @@ export default function LongEntry() {
                 return <img key={elem.key} src={getImage(elem.imageName).default ? getImage(elem.imageName).default : ""} style={isTabletOrMobile ? {} : elem.style} className={elem.className} />
             }
             else if (elem.threejs) {
-                return (
-                    <div key={elem.key}> <ThreeScene/> </div>
-                )
+                return import('../threejsdemo/ThreeScene').then( ThreeScene =>
+                        <div key={elem.key}> <ThreeScene/> </div>
+                    )
             }
             else if (elem.vimeo) {
                 return < div key={elem.key} className="entry--vimeo-fixed-aspect" style={elem.style}>
@@ -31,7 +33,9 @@ export default function LongEntry() {
                     </div>
             }
             else if (elem.wordle) {
-                return <div key ={elem.key}> <Wordle/> </div>
+                return import("../wordle/Wordle").then( Wordle => 
+                <div key ={elem.key}> <Wordle/> </div>
+                )
             }
             else if (elem.subtitle) {
                 return <h1 key={elem.key} className={entryData.darkMode ? "entry--subtitle entry--dark" : "entry--subtitle"}  style={elem.style}> {elem.subtitle} </h1>
