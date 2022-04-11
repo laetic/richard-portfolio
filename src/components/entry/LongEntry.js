@@ -1,4 +1,4 @@
-import React from "react"
+import React, {Suspense} from "react"
 import { Container, Button, Alert } from 'react-bootstrap';
 import { CSSTransition } from 'react-transition-group';
 import "./Entry.css"
@@ -17,15 +17,16 @@ export default function LongEntry() {
     let params = useParams();
     let entryData = {...getEntry(params.projectlink), darkMode:useOutletContext()}
 
+
+
     function paragraphBigEntry(paragraphArr) {
         return (paragraphArr.map((elem) => {
             if (elem.imageName) {
                 return <img key={elem.key} src={getImage(elem.imageName).default ? getImage(elem.imageName).default : ""} style={isTabletOrMobile ? {} : elem.style} className={elem.className} />
             }
             else if (elem.threejs) {
-                return import('../threejsdemo/ThreeScene').then( ThreeScene =>
-                        <div key={elem.key}> <ThreeScene/> </div>
-                    )
+                const LazyThree = React.lazy(() => import("../threejsdemo/ThreeScene.js"))
+                return <Suspense fallback={<h1>Loading...</h1>}><LazyThree/></Suspense>
             }
             else if (elem.vimeo) {
                 return < div key={elem.key} className="entry--vimeo-fixed-aspect" style={elem.style}>
@@ -33,9 +34,8 @@ export default function LongEntry() {
                     </div>
             }
             else if (elem.wordle) {
-                return import("../wordle/Wordle").then( Wordle => 
-                <div key ={elem.key}> <Wordle/> </div>
-                )
+                const LazyWordle = React.lazy(() => import("../wordle/Wordle"))
+                return <Suspense fallback={<h1>Loading...</h1>}><LazyWordle/></Suspense>
             }
             else if (elem.subtitle) {
                 return <h1 key={elem.key} className={entryData.darkMode ? "entry--subtitle entry--dark" : "entry--subtitle"}  style={elem.style}> {elem.subtitle} </h1>
